@@ -1,0 +1,72 @@
+{
+ "purpose": "recruit 2026-08 extra hi-res heroes",
+ "base_url": "https://hebe-corporation.github.io/assets/recruit/2026-08b/",
+ "count": 5,
+ "items": [
+  {
+   "file": "workshop/ws2025_dsc08262.jpg",
+   "url": "https://hebe-corporation.github.io/assets/recruit/2026-08b/workshop/ws2025_dsc08262.jpg",
+   "folder": "workshop",
+   "kind": "workshop",
+   "event": "HeBe VN workshop 2025 (VN, DSLR originals)",
+   "width": 2000,
+   "height": 1333,
+   "orientation": "landscape",
+   "bytes": 617785,
+   "source": "WS2025_DSC08262.jpg",
+   "source_dir": "D:\\00. Projects\\03. HeBe-Hub\\01. HeBe Korea Corp\\05. HR\\05. Design Library\\05. Canva\\photos\\originals_in\\workshop"
+  },
+  {
+   "file": "workshop/ws2025_dsc08511_copy_2.jpg",
+   "url": "https://hebe-corporation.github.io/assets/recruit/2026-08b/workshop/ws2025_dsc08511_copy_2.jpg",
+   "folder": "workshop",
+   "kind": "workshop",
+   "event": "HeBe VN workshop 2025 (VN, DSLR originals)",
+   "width": 2000,
+   "height": 1333,
+   "orientation": "landscape",
+   "bytes": 388342,
+   "source": "WS2025_DSC08511 copy 2.jpg",
+   "source_dir": "D:\\00. Projects\\03. HeBe-Hub\\01. HeBe Korea Corp\\05. HR\\05. Design Library\\05. Canva\\photos\\originals_in\\workshop"
+  },
+  {
+   "file": "workshop/ws2025_dsc08516_copy.jpg",
+   "url": "https://hebe-corporation.github.io/assets/recruit/2026-08b/workshop/ws2025_dsc08516_copy.jpg",
+   "folder": "workshop",
+   "kind": "workshop",
+   "event": "HeBe VN workshop 2025 (VN, DSLR originals)",
+   "width": 2000,
+   "height": 1333,
+   "orientation": "landscape",
+   "bytes": 375661,
+   "source": "WS2025_DSC08516 copy.jpg",
+   "source_dir": "D:\\00. Projects\\03. HeBe-Hub\\01. HeBe Korea Corp\\05. HR\\05. Design Library\\05. Canva\\photos\\originals_in\\workshop"
+  },
+  {
+   "file": "workshop/ws2025_dsc08592.jpg",
+   "url": "https://hebe-corporation.github.io/assets/recruit/2026-08b/workshop/ws2025_dsc08592.jpg",
+   "folder": "workshop",
+   "kind": "workshop",
+   "event": "HeBe VN workshop 2025 (VN, DSLR originals)",
+   "width": 1333,
+   "height": 2000,
+   "orientation": "portrait",
+   "bytes": 345600,
+   "source": "WS2025_DSC08592.jpg",
+   "source_dir": "D:\\00. Projects\\03. HeBe-Hub\\01. HeBe Korea Corp\\05. HR\\05. Design Library\\05. Canva\\photos\\originals_in\\workshop"
+  },
+  {
+   "file": "workshop/ws2025_dsc08595.jpg",
+   "url": "https://hebe-corporation.github.io/assets/recruit/2026-08b/workshop/ws2025_dsc08595.jpg",
+   "folder": "workshop",
+   "kind": "workshop",
+   "event": "HeBe VN workshop 2025 (VN, DSLR originals)",
+   "width": 2000,
+   "height": 1333,
+   "orientation": "landscape",
+   "bytes": 374043,
+   "source": "WS2025_DSC08595.jpg",
+   "source_dir": "D:\\00. Projects\\03. HeBe-Hub\\01. HeBe Korea Corp\\05. HR\\05. Design Library\\05. Canva\\photos\\originals_in\\workshop"
+  }
+ ]
+}
