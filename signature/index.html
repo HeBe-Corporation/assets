@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- HeBe Email Signature Generator v3.1 (2026-10-20 13:3x). Gmail copy = fluid layout (logo float, text block min-width 300) so it adapts to phones without a style block; Outlook package = fixed table. Signature template = 05. Email/02. Context/signature.html v5.2 (owner cards 'A A A' + title on two lines).
+<!-- HeBe Email Signature Generator v3.2 (2026-10-20 18:0x). Gmail copy = two inline-blocks with vertical-align:middle (logo 130 vertically centred against the text when the reading area is at least 632px, text drops below the logo when narrower, max-width 490 / min-width 300) so it adapts to phones without a style block; v3.1 used a float (logo top-left); a flex row was rejected because Gmail's signature save strips align-items, flex-wrap and flex; Outlook package = fixed table. Signature template = 05. Email/02. Context/signature.html v5.2 (owner cards 'A A A' + title on two lines).
      Logo: one canonical GIF for Korea, Vietnam and Cambodia, 130px square (width=height=130, LOGO.md). Icons and logo are hosted on hebe-corporation.github.io/assets/signatures/.
      Built by 90. Outputs/20261020_Signature_Logo_Research/candidates/build_generator_v3.py from the legacy v2 generator (99. Archive/06. HeBe-System Legacy/04. HeBe Email Signature). -->
 
@@ -7,7 +7,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HeBe Email Signature Generator v3.1</title>
+<title>HeBe Email Signature Generator v3.2</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Noto+Sans:wght@300;400;500;600;700&family=Alex+Brush&family=Dancing+Script:wght@700&display=swap');
   *{margin:0;padding:0;box-sizing:border-box}
@@ -824,10 +824,15 @@ function buildSignature(forCopy){
   const p = sigPieces(k => k === 'logo' ? LOGO_URL : k === 'phone' ? PHONE_ICON : k);
   // v3.1 (2026-10-20 owner 'B A A' + '수신자 기기에 따라 무조건 다르게'): fluid layout for Gmail settings. Logo floats left; the text block keeps its own
   // formatting context (overflow:hidden) with a minimum width, so beside the logo on wide screens and below the logo on phones. Inline styles only.
-  const fluid = '<div style="float:left;width:' + LOGO_PX + 'px;padding:0 12px 12px 0">' + p.logo + '</div>' +
-    '<div style="overflow:hidden;min-width:300px;' + p.F + '"><div style="padding:0 0 6px 0">' + p.nameHtml + '</div>' +
-    '<div style="padding:10px 0 0 0;border-top:2px dotted #BDBDBD">' + p.contacts + '</div></div>' +
-    '<div style="clear:both;height:0;line-height:0;font-size:0">&nbsp;</div>' +
+  // v3.2 (2026-10-20 owner '왜 로고가 중간배치가 아니라 위로 올라갔어?'): logo and text are two inline-blocks with vertical-align:middle, so the
+  // logo is vertically centred against the whole text block when both fit on one line (container at least 130 + 12 + 490 = 632px), and the
+  // text drops below the logo at full width when narrower (phones, narrow reading panes). A flex row was tried first and rejected: Gmail's
+  // signature save keeps display:flex but strips align-items, flex-wrap and flex (17:3x test). Gmail's save keeps display:inline-block,
+  // vertical-align, max-width and min-width (17:5x test, persisted after reload).
+  const fluid = '<div style="font-size:0;line-height:0">' +
+    '<div style="display:inline-block;vertical-align:middle;width:' + LOGO_PX + 'px;padding:0 12px 12px 0">' + p.logo + '</div>' +
+    '<div style="display:inline-block;vertical-align:middle;max-width:490px;min-width:300px;font-size:14px;line-height:1.5;' + p.F + '"><div style="padding:0 0 6px 0">' + p.nameHtml + '</div>' +
+    '<div style="padding:10px 0 0 0;border-top:2px dotted #BDBDBD">' + p.contacts + '</div></div></div>' +
     '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:collapse"><tbody>' + p.disc.replace('colspan="3" ', '') + '</tbody></table>';
   return '<div dir="ltr" class="gmail_signature" data-smartmail="gmail_signature" style="max-width:632px;-webkit-text-size-adjust:100%">' + top + fluid + '</div>';
 }
@@ -1039,7 +1044,7 @@ function buildSignatureOutlook(filesDir){
   else if(sigType === 'auto' && v('nameEn')) top += '<p style="margin:0 0 10px 0;padding:0"><img src="' + fd + '/signature.png" height="45" style="height:45px;border:0" border="0"></p>';
   const p = sigPieces(k => k === 'logo' ? fd + '/logo.png' : k === 'phone' ? fd + '/phone.png' : fd + '/' + k.split('/').pop());
   return '<!DOCTYPE html>\n<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">\n<head>\n<meta charset="UTF-8">\n' +
-    '<meta name="Generator" content="HeBe Signature Generator v3.1">\n<!--[if gte mso 9]><xml><o:OfficeDocumentSettings><o:AllowPNG/><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml><![endif]-->\n' +
+    '<meta name="Generator" content="HeBe Signature Generator v3.2">\n<!--[if gte mso 9]><xml><o:OfficeDocumentSettings><o:AllowPNG/><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml><![endif]-->\n' +
     '<style>body,table,td,p,a,span{font-family:Verdana,Geneva,sans-serif}table{border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt}img{border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic}</style>\n' +
     '</head>\n<body style="margin:0;padding:0;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%">\n' + top + p.core + '\n</body>\n</html>';
 }
