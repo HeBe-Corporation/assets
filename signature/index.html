@@ -830,7 +830,7 @@ function buildSignature(forCopy){
   // signature save keeps display:flex but strips align-items, flex-wrap and flex (17:3x test). Gmail's save keeps display:inline-block,
   // vertical-align, max-width and min-width (17:5x test, persisted after reload).
   const fluid = '<div style="font-size:0;line-height:0">' +
-    '<div style="display:inline-block;vertical-align:middle;width:' + LOGO_PX + 'px;padding:0 12px 12px 0">' + p.logo + '</div>' +
+    '<div style="display:inline-block;vertical-align:middle;width:' + LOGO_PX + 'px;padding:6px 12px 6px 0">' + p.logo + '</div>' +  // padding symmetric so the logo centre = text centre (ASTRA6 18:1x)
     '<div style="display:inline-block;vertical-align:middle;max-width:490px;min-width:300px;font-size:14px;line-height:1.5;' + p.F + '"><div style="padding:0 0 6px 0">' + p.nameHtml + '</div>' +
     '<div style="padding:10px 0 0 0;border-top:2px dotted #BDBDBD">' + p.contacts + '</div></div></div>' +
     '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:collapse"><tbody>' + p.disc.replace('colspan="3" ', '') + '</tbody></table>';
