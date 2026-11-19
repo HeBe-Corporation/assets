@@ -7,7 +7,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HeBe Email Signature Generator v3.2</title>
+<title>HeBe Email Signature Generator v3.3</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Noto+Sans:wght@300;400;500;600;700&family=Alex+Brush&family=Dancing+Script:wght@700&display=swap');
   *{margin:0;padding:0;box-sizing:border-box}
@@ -687,7 +687,32 @@ function v(id){ return document.getElementById(id).value.trim(); }
 function co(){ return COMPANY[document.getElementById('company').value] || COMPANY.korea; }
 
 // ─── Canvas signature generator ───
+// v3.3 (2026-11-19): Alex Brush must be loaded before the name is drawn, otherwise the canvas falls back to another script font.
+// Drawn on first use and again once the font arrives (one wait, no loop when the font cannot load).
+let ALEX_WAIT = false;
+function ensureAlexBrush(){
+  try {
+    if(ALEX_WAIT || document.fonts.check("44px 'Alex Brush'")) return;
+    ALEX_WAIT = true;
+    document.fonts.load("44px 'Alex Brush'").then(() => up()).catch(() => {});
+  } catch(e){}
+}
+
+// v3.3 (2026-11-19 owner "signature 만드는 프로그램에 직원들도 나와 똑같이 만들어 질 수 있게 해줘"): the same top block as the CEO canonical
+// signature v5.6 (02. Context/signature.html): "Sincerely," in Verdana 13px/18px #222222, then the handwritten name 45px high, 4px apart,
+// 16px above the logo block. The name picture is Alex Brush 44px on a 90px canvas (generateSignatureImage), the same drawing as the CEO
+// picture mikael_signature_name.png (448x90, ink box 10,20 to 444,61), shown at half size.
+function sigTopBlock(greeting, img){
+  if(!greeting && !img) return '';
+  let rows = '';
+  if(greeting) rows += '<tr><td style="padding:' + (img ? '0' : '0 0 16px 0') + ';font-family:Verdana,Geneva,sans-serif;font-size:13px;line-height:18px;color:#222222">' + greeting + '</td></tr>';
+  if(img) rows += '<tr><td style="padding:' + (greeting ? '4px' : '0') + ' 0 16px 0"><img src="' + img.src + '"' + (img.w ? ' width="' + img.w + '"' : '') +
+    ' height="45" alt="" style="display:block;' + (img.w ? 'width:' + img.w + 'px;' : '') + 'height:45px;border:0"></td></tr>';
+  return '<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse"><tbody>' + rows + '</tbody></table>';
+}
+
 function generateSignatureImage(name){
+  ensureAlexBrush();
   const canvas = document.getElementById('sigCanvas');
   const ctx = canvas.getContext('2d');
   canvas.width = 600;
@@ -814,13 +839,10 @@ function buildSignature(forCopy){
   const greeting = document.getElementById('greeting').value;
   const sigType = document.getElementById('sigType').value;
   const sigUrl = v('signatureImg');
-  let top = '';
-  if(greeting) top += '<div style="font-family:Verdana,Geneva,sans-serif;font-size:13px;color:#212121;padding:0 0 4px 0">' + greeting + '</div>';
-  if(sigType === 'url' && sigUrl){
-    top += '<div style="padding:0 0 10px 0"><img src="' + sigUrl + '" height="45" alt="" style="height:45px;border:0"></div>';
-  } else if(sigType === 'auto' && v('nameEn')){
-    top += '<div style="padding:0 0 10px 0"><img src="' + generateSignatureImage(v('nameEn')) + '" height="45" alt="" style="height:45px;border:0"></div>';
-  }
+  let sigImg = null;
+  if(sigType === 'url' && sigUrl) sigImg = { src: sigUrl, w: 0 };
+  else if(sigType === 'auto' && v('nameEn')){ const src = generateSignatureImage(v('nameEn')); sigImg = { src, w: Math.round(document.getElementById('sigCanvas').width / 2) }; }
+  const top = sigTopBlock(greeting, sigImg);   // v3.3: the CEO canonical v5.6 top block
   const p = sigPieces(k => k === 'logo' ? LOGO_URL : k === 'phone' ? PHONE_ICON : k);
   // v3.1 (2026-10-20 owner 'B A A' + '수신자 기기에 따라 무조건 다르게'): fluid layout for Gmail settings. Logo floats left; the text block keeps its own
   // formatting context (overflow:hidden) with a minimum width, so beside the logo on wide screens and below the logo on phones. Inline styles only.
@@ -844,8 +866,9 @@ function showToast(m){
   setTimeout(()=>t.classList.remove('show'),2800);
 }
 
-function copySignature(){
+async function copySignature(){
   if(!validate()){ showToast('⚠️ Please fill in all required fields'); return; }
+  try { await document.fonts.load("44px 'Alex Brush'"); } catch(e){}   // v3.3: the name picture is drawn in Alex Brush, never a fallback font
   const html=buildSignature(true);
   const blob=new Blob([html],{type:'text/html'});
   const el=document.createElement('div');el.innerHTML=html;
@@ -860,8 +883,9 @@ function copySignature(){
   });
 }
 
-function copyHTML(){
+async function copyHTML(){
   if(!validate()){ showToast('⚠️ Please fill in all required fields'); return; }
+  try { await document.fonts.load("44px 'Alex Brush'"); } catch(e){}
   navigator.clipboard.writeText(buildSignature(true)).then(()=>showToast('✅ HTML copied!'));
 }
 
@@ -963,9 +987,10 @@ resetForm = function(){
 };
 
 initCustomSelects();
-// v3 defaults (2026-10-20): like the CEO canonical, no greeting line and no handwritten image unless chosen
-document.getElementById('greeting').value = '';
-document.getElementById('sigType').value = 'none';
+// v3.3 defaults (2026-11-19 owner "signature 만드는 프로그램에 직원들도 나와 똑같이 만들어 질 수 있게 해줘"): like the CEO canonical v5.6,
+// "Sincerely," and the handwritten name drawn from the English name (v3 2026-10-20 had both off)
+document.getElementById('greeting').value = 'Sincerely,';
+document.getElementById('sigType').value = 'auto';
 ['greeting','sigType'].forEach(syncCustomSelect);
 if (typeof toggleSigUrl === 'function') toggleSigUrl();
 up();
@@ -1001,7 +1026,7 @@ function base64ToBlob(b64, mime){
 // ─── Canvas signature → PNG Blob (with font loading guarantee) ───
 async function generateSignaturePNGBlob(name){
   // Ensure fonts are loaded before rendering
-  try { await document.fonts.ready; } catch(e){}
+  try { await document.fonts.load("44px 'Alex Brush'"); await document.fonts.ready; } catch(e){}   // v3.3: wait for Alex Brush itself
   
   // Check if cursive font is available, fallback to Georgia Italic
   let fontFamily = "'Alex Brush','Dancing Script','Brush Script MT',cursive";
@@ -1038,13 +1063,13 @@ function buildSignatureOutlook(filesDir){
   const greeting = document.getElementById('greeting').value;
   const sigType = document.getElementById('sigType').value;
   const sigUrl = v('signatureImg');
-  let top = '';
-  if(greeting) top += '<p style="font-family:Verdana,Geneva,sans-serif;font-size:13px;color:#212121;margin:0 0 4px 0;padding:0">' + greeting + '</p>';
-  if(sigType === 'url' && sigUrl) top += '<p style="margin:0 0 10px 0;padding:0"><img src="' + sigUrl + '" height="45" style="height:45px;border:0" border="0"></p>';
-  else if(sigType === 'auto' && v('nameEn')) top += '<p style="margin:0 0 10px 0;padding:0"><img src="' + fd + '/signature.png" height="45" style="height:45px;border:0" border="0"></p>';
+  let sigImg = null;
+  if(sigType === 'url' && sigUrl) sigImg = { src: sigUrl, w: 0 };
+  else if(sigType === 'auto' && v('nameEn')){ generateSignatureImage(v('nameEn')); sigImg = { src: fd + '/signature.png', w: Math.round(document.getElementById('sigCanvas').width / 2) }; }
+  const top = sigTopBlock(greeting, sigImg);   // v3.3: same block as the Gmail copy and the CEO canonical v5.6
   const p = sigPieces(k => k === 'logo' ? fd + '/logo.png' : k === 'phone' ? fd + '/phone.png' : fd + '/' + k.split('/').pop());
   return '<!DOCTYPE html>\n<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">\n<head>\n<meta charset="UTF-8">\n' +
-    '<meta name="Generator" content="HeBe Signature Generator v3.2">\n<!--[if gte mso 9]><xml><o:OfficeDocumentSettings><o:AllowPNG/><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml><![endif]-->\n' +
+    '<meta name="Generator" content="HeBe Signature Generator v3.3">\n<!--[if gte mso 9]><xml><o:OfficeDocumentSettings><o:AllowPNG/><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml><![endif]-->\n' +
     '<style>body,table,td,p,a,span{font-family:Verdana,Geneva,sans-serif}table{border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt}img{border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic}</style>\n' +
     '</head>\n<body style="margin:0;padding:0;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%">\n' + top + p.core + '\n</body>\n</html>';
 }
